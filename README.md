@@ -10,6 +10,8 @@ Installation
 pip install interactive-helpdesk-cli
 ```
 
+Download on PyPI: [interactive-helpdesk-cli 0.1.0](https://pypi.org/project/interactive-helpdesk-cli/0.1.0/)
+
 Or from source:
 
 ```

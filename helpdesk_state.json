@@ -1,0 +1,79 @@
+{
+    "next_id": 3,
+    "tickets": {
+        "1": {
+            "ticket_id": 1,
+            "description": "Parent ticket",
+            "status": "closed",
+            "priority": "high",
+            "parent_id": null,
+            "created_at": "2025-08-09T19:14:46.539201",
+            "closed_at": "2025-08-09T19:15:52.319782"
+        },
+        "2": {
+            "ticket_id": 2,
+            "description": "Child ticket",
+            "status": "open",
+            "priority": "medium",
+            "parent_id": 1,
+            "created_at": "2025-08-09T19:15:05.026200",
+            "closed_at": null
+        }
+    },
+    "history": [
+        {
+            "ticket_id": 1,
+            "description": "Parent ticket",
+            "status": "open",
+            "priority": "high",
+            "parent_id": null,
+            "created_at": "2025-08-09T19:14:46.539201",
+            "closed_at": null
+        },
+        {
+            "ticket_id": 2,
+            "description": "Child ticket",
+            "status": "open",
+            "priority": "medium",
+            "parent_id": 1,
+            "created_at": "2025-08-09T19:15:05.026200",
+            "closed_at": null
+        }
+    ],
+    "standard_queue": [
+        {
+            "ticket_id": 2,
+            "description": "Child ticket",
+            "status": "open",
+            "priority": "medium",
+            "parent_id": 1,
+            "created_at": "2025-08-09T19:15:05.026200",
+            "closed_at": null
+        },
+        {
+            "ticket_id": 2,
+            "description": "Child ticket",
+            "status": "open",
+            "priority": "medium",
+            "parent_id": 1,
+            "created_at": "2025-08-09T19:15:05.026200",
+            "closed_at": null
+        }
+    ],
+    "high_priority_queue": [],
+    "undo_stack": [
+        {
+            "action": "create",
+            "ticket_id": 1
+        },
+        {
+            "action": "create",
+            "ticket_id": 2
+        },
+        {
+            "action": "close",
+            "ticket_id": 1,
+            "prev_status": "open"
+        }
+    ]
+}

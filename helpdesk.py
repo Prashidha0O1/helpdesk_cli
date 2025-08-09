@@ -1,48 +1,10 @@
-import datetime 
-import heapq
 import json
 import os
 import click
 
-class Ticket:
-    def __init__(self, ticket_id, desc, priority, parent_id=None):
-        self.ticket_id = ticket_id
-        self.desc = desc
-        self.status = 'open'
-        self.priority = priority
-        self.parent_id = parent_id
-        self.created_at = datetime.datetime.now()
-        self.closed_at = None
-    
-    def close(self):
-        if self.status == 'open':
-            self.status == 'closed'
-            self.closed_at = datetime.datetime.datetime.now()
-            return True
-        return False 
-    
-    def __repr__(self):
-        return f"Ticket {self.ticket_id}: ({self.desc}), ({self.priority}), (self.status)"
-
-    def to_dict(self):
-        return {
-            'ticket_id': self.ticket_id,
-            'description': self.description,
-            'status': self.status,
-            'priority': self.priority,
-            'parent_id': self.parent_id,
-            'created_at': self.created_at.isoformat(),
-            'closed_at': self.closed_at.isoformat() if self.closed_at else None
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        ticket = cls(data['ticket_id'], data['description'], data['priority'], data['parent_id'])
-        ticket.status = data['status']
-        ticket.created_at = datetime.datetime.fromisoformat(data['created_at'])
-        ticket.closed_at = datetime.datetime.fromisoformat(data['closed_at']) if data['closed_at'] else None
-        return ticket
-    
+from ticket import Ticket
+from LinkedList import LinkedList
+from Stack import Stack, Queue, PriorityQueue
 
 class HelpDeskSystem:
     STATE_FILE = 'helpdesk_state.json'
@@ -159,6 +121,38 @@ class HelpDeskSystem:
             self.high_priority_queue = PriorityQueue.from_list(state['high_priority_queue'])
             self.undo_stack = Stack.from_list(state['undo_stack'])
 
+
+def _render_table(rows):
+    # Determine column widths
+    col_count = max(len(r) for r in rows)
+    widths = [0] * col_count
+    for r in rows:
+        for i, cell in enumerate(r):
+            widths[i] = max(widths[i], len(str(cell)))
+
+    def sep_line():
+        parts = ["+" + "-" * (w + 2) for w in widths]
+        return "".join(parts) + "+"
+
+    def format_row(row):
+        cells = []
+        for i, w in enumerate(widths):
+            text = str(row[i]) if i < len(row) else ""
+            if i == 0:
+                cells.append(f"| {text.ljust(w)} ")
+            else:
+                cells.append(f"| {text.rjust(w)} ")
+        return "".join(cells) + "|"
+
+    lines = [sep_line(), format_row(rows[0]), sep_line()]
+    for r in rows[1:-1]:
+        lines.append(format_row(r))
+    if len(rows) > 1:
+        lines.append(sep_line())
+        lines.append(format_row(rows[-1]))
+    lines.append(sep_line())
+    return "\n".join(lines)
+
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
@@ -207,8 +201,27 @@ def check(ticket_id):
 def analytics():
     system = HelpDeskSystem()
     dashboard = system.analytics_dashboard()
-    for row in dashboard:
-        click.echo(" | ".join(map(str, row)))
+
+    headers = ["Priority", "Open", "Closed", "Resolved %"]
+    data_rows = []
+    total_open = 0
+    total_closed = 0
+    for row in dashboard[1:]:
+        priority_label = row[0]
+        open_count = int(row[1])
+        closed_count = int(row[2])
+        total = open_count + closed_count
+        resolved_pct = f"{(closed_count / total * 100):.0f}%" if total > 0 else "0%"
+        data_rows.append([priority_label, str(open_count), str(closed_count), resolved_pct])
+        total_open += open_count
+        total_closed += closed_count
+
+    total_all = total_open + total_closed
+    total_pct = f"{(total_closed / total_all * 100):.0f}%" if total_all > 0 else "0%"
+    total_row = ["Total", str(total_open), str(total_closed), total_pct]
+
+    table = _render_table([headers] + data_rows + [total_row])
+    click.echo(table)
 
 @cli.command(help='View ticket history')
 def history():
@@ -223,3 +236,7 @@ def undo():
         click.echo("Last action undone.")
     else:
         click.echo("No actions to undo.")
+
+
+if __name__ == '__main__':
+    cli()

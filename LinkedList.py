@@ -29,13 +29,23 @@ class LinkedList:
         current = self.head
         lst = []
         while current:
-            lst.append(current.data.to_dict())
+            # Serialize ticket objects using their to_dict if available
+            data = current.data.to_dict() if hasattr(current.data, 'to_dict') else current.data
+            lst.append(data)
             current = current.next
         return lst
 
     @classmethod
     def from_list(cls, lst):
         ll = cls()
+        # Defer Ticket import to runtime to avoid circular imports
+        try:
+            from ticket import Ticket  # type: ignore
+        except Exception:
+            Ticket = None  # type: ignore
         for data in lst:
-            ll.append(Ticket.from_dict(data))
+            if isinstance(data, dict) and Ticket is not None and 'ticket_id' in data:
+                ll.append(Ticket.from_dict(data))
+            else:
+                ll.append(data)
         return ll

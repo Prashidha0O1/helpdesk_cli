@@ -17,9 +17,10 @@ setup(
     long_description_content_type="text/markdown",
     author="Prashidha",
     license="MIT",
-    url="https://example.com/interactive-helpdesk-cli",
+    url="https://github.com/Prashidha0O1/helpdesk_cli",
     project_urls={
-        "Source": "https://example.com/interactive-helpdesk-cli",
+        "Source": "https://github.com/Prashidha0O1/helpdesk_cli",
+        "Issues": "https://github.com/Prashidha0O1/helpdesk_cli/issues",
     },
     python_requires=">=3.9",
     install_requires=[

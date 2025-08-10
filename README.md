@@ -58,3 +58,10 @@ License
 
 MIT
 
+---------
+
+Todo: 
+- Google Oauth Auth Register / Signin
+- User Dashboard with Analytics
+- Admin Dashboard with Analytics
+- Ticket Raise Notification 

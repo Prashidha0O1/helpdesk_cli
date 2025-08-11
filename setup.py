@@ -26,6 +26,11 @@ setup(
     install_requires=[
         "click>=8.0,<9.0",
     ],
+    extras_require={
+        "ui": [
+            "rich>=13.0,<14.0",
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -34,7 +39,7 @@ setup(
         "Topic :: Utilities",
     ],
     # We ship individual modules (flat files), not a package directory
-    py_modules=["helpdesk", "LinkedList", "Stack", "ticket"],
+    py_modules=["helpdesk", "LinkedList", "Stack", "ticket", "session", "ui"],
     entry_points={
         "console_scripts": [
             "helpdesk=helpdesk:cli",

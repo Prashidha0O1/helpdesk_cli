@@ -42,6 +42,39 @@ helpdesk history
 helpdesk undo
 ```
 
+Roles, Sessions, and TUI
+------------------------
+
+Local session (no external auth required):
+
+```
+helpdesk login --user-id you --name "Your Name" --role user
+helpdesk whoami
+```
+
+Create and manage tickets (owner is set from your session):
+
+```
+helpdesk create --description "Payment failing" --priority high
+helpdesk assign 1 --to agent_alex
+helpdesk tag 1 --add payments --add urgent
+helpdesk my
+```
+
+Admin dashboard (login with role=admin):
+
+```
+helpdesk login --user-id admin01 --name "Admin" --role admin
+helpdesk admin
+```
+
+Rich TUI (optional):
+
+```
+pip install "interactive-helpdesk-cli[ui]"
+helpdesk tui
+```
+
 Development
 -----------
 
